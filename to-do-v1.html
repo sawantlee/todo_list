@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>ToDo List</title>
+	<!-- <link rel="stylesheet" href="path/to/font-awesome/css/font-awesome.min.css"> -->
+	<style type="text/css">
+		input#newtaskinput {
+    height: 25px;
+    padding: 0px 10px;
+    margin-right: 10px;
+    min-width: 300px;
+}
+
+button.addbtn {
+    /* appearance: unset!important; */
+    background: skyblue;
+    height: 29px;
+    padding: 0px 24px;
+    border: 1px solid skyblue;
+}
+
+ul#todolist {
+    list-style: none;
+    padding-left: 0px;
+}
+ul#todolist li button {
+    margin-left: 50px;
+}
+ul#todolist li label {
+    width: 50%!important;
+    display: inline-block;
+}
+ul#todolist li {
+    margin-bottom: 15px;
+}
+
+	</style>
+</head>
+<body>
+
+<h1>ToDo List</h1>
+<div>
+
+<input type="text" name="" id="newtaskinput" placeholder="New Task">
+<button class="addbtn" onclick="addToDoListFn()">Add</button>
+</div>
+<p id="error" style="color: red;"></p>
+
+<div class="todolist-wrap">
+	<!-- <ul id="test">
+		<li>test</li>
+	</ul> -->
+	 <ul id="todolist">
+		<!-- <li><input type="checkbox" name="todolistcheck" class="checklist" value="Learn React"><label>Learn React</label><button class="deletebtn" name="Learn React" >Delete</button></li> -->
+	</ul>
+
+    
+
+</div>
+
+<script type="text/javascript">
+
+	let newTaskInput = document.getElementById('newtaskinput');
+	let todolistVar = document.getElementById('todolist');
+	let todoDeleteBtnvar = document.getElementsByClassName('deletebtn');
+	console.log(todoDeleteBtnvar);
+
+	//let todoDeleteBtnvar = document.querySelector('.deletebtn');
+	//console.log(todoDeleteBtnvar);
+
+
+
+	document.addEventListener('DOMContentLoaded', getDataToShow);
+
+	todolistVar.addEventListener('click', function (e){
+		e.stopPropagation()
+	})
+
+
+
+
+	// todoDeleteBtnvar.forEach(function(el){
+	// 	el.addEventListener('click', function test(e){
+	// 	console.log(e.target);
+	// } );
+
+	// });
+
+
+	// todoDeleteBtnvar.addEventListener('click', deleteItemFn);
+	// function deleteItemFn(e){
+	// const item = e.target;
+	// console.log(item);
+	// for (let i=0; i <= todoDeleteBtnvar.length; i++){
+	// 	if (item.childNodes[i].className=="deletebtn"){
+	//  			item.remove();
+	// 		}
+	// }
+	// }
+
+
+		
+	
+
+	
+
+
+	//Delete Item 
+	// todolistVar.addEventListener('click', deleteItemFn);
+
+	// function deleteItemFn(e){
+	// 	const item = e.target;
+	// 	for(let i =0 ; i < item.childNodes.length; i++){
+	// 		if (item.childNodes[i].className=="deletebtn"){
+	// 			item.remove();
+	// 		}
+	// 	}
+
+	// }
+    
+
+
+
+	//Add value of input after Press Enter Key 
+	newTaskInput.addEventListener("keydown", function (e){
+		if(e.code === "Enter"){
+			addToDoListFn();			
+		}
+	});
+
+
+
+	//Main Function to add values in DOM
+	function addToDoListFn(){
+		let newTaskVar = document.getElementById('newtaskinput').value;
+
+
+		if(!newTaskVar){
+			document.getElementById('error').innerHTML = "Please add new task";
+			return;
+		}
+
+		else{
+
+
+		let createCheckbox = document.createElement('input');
+		createCheckbox.type = 'checkbox';
+		createCheckbox.value = `${newTaskVar}`;
+		createCheckbox.name = `${newTaskVar}`;
+
+		todoSaveLocalStoreFn(newTaskVar);
+
+		let createCheckboxLabel = document.createElement('label');
+		createCheckboxLabel.htmlFor = `${newTaskVar}`;
+		createCheckboxLabel.appendChild(document.createTextNode(`${newTaskVar}`)); 
+
+		let createdeleteBtn = document.createElement('button');
+		createdeleteBtn.classList.add = "deletebtn";
+		createdeleteBtn.innerHTML = "Delete";
+		createdeleteBtn.name=`${newTaskVar}`;
+
+
+		let createNewLi = document.createElement('li');
+		createNewLi.appendChild(createCheckbox);
+		createNewLi.appendChild(createCheckboxLabel);
+		createNewLi.appendChild(createdeleteBtn);
+
+		todolistVar.append(createNewLi);
+
+		newtaskinput.value = "";
+		}
+
+
+		//Function to store values in Local Storage
+		function todoSaveLocalStoreFn(todo){
+			let todos;
+			if (localStorage.getItem("todos") === null){
+				todos=[];
+			}
+			else{
+				todos = JSON.parse(localStorage.getItem('todos'));
+			}
+
+			todos.push(todo);
+			localStorage.setItem('todos', JSON.stringify(todos));
+		}
+ 
+	//let createNewLI = document.createElement("li");
+
+	}
+
+
+
+	//Show local storage values on load
+	function getDataToShow(){
+
+		let todos;
+			if (localStorage.getItem("todos") === null){
+				todos=[];
+			}
+			else{
+				todos = JSON.parse(localStorage.getItem('todos'));
+			}
+
+			localStorage.setItem('todos', JSON.stringify(todos));
+		
+		// for (let i=0; i < localtodo.length; i++){
+		// 	console.log(localtodo.length);
+		// }
+
+		todos.forEach(function(todo){
+
+		let createCheckbox = document.createElement('input');
+		createCheckbox.type = 'checkbox';
+		createCheckbox.value = todo;
+		createCheckbox.name = todo;
+
+		//todoSaveLocalStoreFn(newTaskVar);
+
+		let createCheckboxLabel = document.createElement('label');
+		createCheckboxLabel.htmlFor = todo;
+		createCheckboxLabel.appendChild(document.createTextNode(todo)); 
+
+		let createdeleteBtn = document.createElement('button');
+		createdeleteBtn.classList.add = "deletebtn";
+		createdeleteBtn.innerHTML = "Delete";
+		createdeleteBtn.className = "deletebtn";
+		createdeleteBtn.name=`${todo}`;
+
+
+		let createNewLi = document.createElement('li');
+		createNewLi.appendChild(createCheckbox);
+		createNewLi.appendChild(createCheckboxLabel);
+		createNewLi.appendChild(createdeleteBtn);
+
+		todolistVar.append(createNewLi);
+
+		});
+
+		  
+
+		}
+
+		
+
+
+
+	
+	
+
+
+
+</script>
+
+
+</body>
+</html>
